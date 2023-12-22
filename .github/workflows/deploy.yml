@@ -27,8 +27,7 @@ jobs:
 
     - name: Archive production artifacts
       run: |
-        set -euxo pipefail
-        tar --exclude='.git' --exclude='.github' --warning=no-file-changed -czvf packaged-code.tar.gz .
+        tar --exclude='.git' --exclude='.github' -czvf packaged-code.tar.gz .
     - uses: actions/upload-artifact@v2
       with:
         name: packaged-code
