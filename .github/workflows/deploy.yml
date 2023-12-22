@@ -1,0 +1,80 @@
+name: Deploy to Production Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      BOT_TOKEN: ${{ secrets.SHAKTI_BOT }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: packaged-code
+        path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: packaged-code
+
+    - name: Install lftp for SFTP
+      run: sudo apt-get install lftp
+
+    - name: SFTP Deploy
+      run: |
+        lftp -e "
+        set ssl:verify-certificate no;
+        set sftp:auto-confirm yes;
+        open sftp://devilaks@devilaks.ftp.tools;
+        user ${{ secrets.SFTP_USERNAME }} ${{ secrets.SFTP_PASSWORD }};
+        lcd ./;
+        cd /home/devilaks/bot;
+        mirror --reverse --continue --verbose --parallel=10 . .;
+        bye;
+        "
+
+    # Здесь могут быть добавлены дополнительные шаги, например очистка кэша на сервере
+
+    - name: Send Telegram Notification on Deploy Failure
+      if: failure()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          🚨 [Бот] Развёртывание не удалось! Пожалуйста, проверьте логи сборки.
+          *️⃣ Подробности сборки можно посмотреть здесь: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    - name: Send Telegram Notification on Deploy Success
+      if: success()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: "🚀 [Бот] Развёртывание успешно завершено! Проверьте бота: @anastasia_shakti_bot"
