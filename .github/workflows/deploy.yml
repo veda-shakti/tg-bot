@@ -27,7 +27,7 @@ jobs:
 
     - name: Archive production artifacts
       run: |
-        set -x
+        ls -la
         tar --exclude='.git' --exclude='.github' --warning=no-file-changed -czvf packaged-code.tar.gz .
     - uses: actions/upload-artifact@v2
       with:
