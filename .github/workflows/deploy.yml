@@ -25,9 +25,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Create Directory Snapshot
+      run: |
+        mkdir snapshot
+        rsync -av --exclude='.git' --exclude='.github' ./ snapshot/
+
     - name: Archive production artifacts
       run: |
-        tar --exclude='.git' --exclude='.github' -czvf packaged-code.tar.gz .
+        set -euxo pipefail
+        tar -czvf packaged-code.tar.gz -C snapshot .
     - uses: actions/upload-artifact@v2
       with:
         name: packaged-code
