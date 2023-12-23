@@ -96,7 +96,7 @@ jobs:
           cd /home/devilaks/bot
           ./stop.sh
           tar -xzvf packaged-code.tar.gz
-          rm packaged-code.tar.gz
+          rm --force packaged-code.tar.gz
           nohup ./run_bot.sh &
 
     - name: Send Telegram Notification on Deploy Failure
