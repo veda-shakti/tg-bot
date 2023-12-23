@@ -92,6 +92,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
+          export SHAKTI_BOT=${{ secrets.SHAKTI_BOT }}
           cd /home/devilaks/bot
           ./stop.sh
           tar -xzvf packaged-code.tar.gz
