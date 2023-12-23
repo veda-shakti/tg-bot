@@ -84,7 +84,7 @@ jobs:
         mirror --reverse --continue --verbose --parallel=10 . .;
         bye;
         "
-        ssh -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+        ssh -i ${{ secrets.SERVER_SSH_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
           set -e
           export SHAKTI_BOT=${BOT_TOKEN}
           cd /home/devilaks/bot
@@ -92,7 +92,6 @@ jobs:
           tar -xzvf packaged-code.tar.gz
           [ -f packaged-code.tar.gz ] && rm --force packaged-code.tar.gz
           nohup ./run_bot.sh &
-        EOF
 
     # - name: SSH and Deploy
     #   uses: appleboy/ssh-action@master
