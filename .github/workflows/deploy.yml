@@ -107,16 +107,19 @@ jobs:
     
           echo "Checking for existing packaged-code.tar.gz file"
           if [ -f packaged-code.tar.gz ]; then
-            echo "packaged-code.tar.gz exists. Removing..."
-            rm --force packaged-code.tar.gz
-            echo "Old packaged-code.tar.gz removed"
+            echo "Found packaged-code.tar.gz. Proceeding to extract it"
           else
-            echo "No existing packaged-code.tar.gz file to remove"
+            echo "No packaged-code.tar.gz file found. Exiting script"
+            exit 1
           fi
     
           echo "Extracting packaged-code.tar.gz"
           tar -xzvf packaged-code.tar.gz
           echo "Extraction complete"
+    
+          echo "Removing the extracted packaged-code.tar.gz file"
+          rm --force packaged-code.tar.gz
+          echo "packaged-code.tar.gz removed"
     
           echo "Starting the bot process"
           nohup ./run_bot.sh &
