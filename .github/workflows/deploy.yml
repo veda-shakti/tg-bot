@@ -106,6 +106,9 @@ jobs:
             exit 1
           fi
           
+          echo "Проверка переменной окружения SHAKTI_BOT"
+          echo $SHAKTI_BOT
+
           nohup ./run_bot.sh &
 
     - name: Send Telegram Notification on Deploy Failure
