@@ -104,11 +104,9 @@ jobs:
             echo "No packaged-code.tar.gz file found. Exiting script"
             exit 1
           fi
-          
-          echo "Проверка переменной окружения SHAKTI_BOT"
-          echo $SHAKTI_BOT
 
-          nohup ./run_bot.sh &
+          nohup ./run_bot.sh > bot.log 2>&1 &
+          echo "Bot process started"
 
     - name: Send Telegram Notification on Deploy Failure
       if: failure()
