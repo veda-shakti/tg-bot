@@ -13,10 +13,10 @@ jobs:
       BOT_TOKEN: ${{ secrets.SHAKTI_BOT }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.11'
 
@@ -34,7 +34,7 @@ jobs:
       run: |
         set -euxo pipefail
         tar -czvf packaged-code.tar.gz -C snapshot .
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: packaged-code
         path: packaged-code.tar.gz
@@ -62,10 +62,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Download build artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: packaged-code
 
