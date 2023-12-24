@@ -30,24 +30,27 @@ def setup_handler(router: Router):
     #         await rf('calculator_intro'),
     #         reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
     #     )
-        
     @router.callback_query()
     async def start_calc_handler(callback_query: CallbackQuery, state: FSMContext):
         if callback_query.data == bk.CALC.name:
             await state.set_state(Calc.date_prompt)
+            # await callback_query.message.answer(
+            #     "Введите дату рождения (ДД.ММ.ГГГГ)",
+            #     reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
+            # )
             await callback_query.message.answer(
-                await rf('calculator_intro'),
-                reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
+                "Выберите дату: ",
+                reply_markup=await DialogCalendar().start_calendar()
             )
 
     # Step 2.1: Date is known
-    @router.message(Calc.date_prompt)
-    @router.message(F.data == bk.DATE_KNOWN.value)
-    async def date_handler_1(msg: Message, state: FSMContext):
-        await msg.answer(
-            "Выберите дату: ",
-            reply_markup=await DialogCalendar().start_calendar()
-        )
+    # @router.message(Calc.date_prompt)
+    # @router.message(F.data == bk.DATE_KNOWN.value)
+    # async def date_handler_1(msg: Message, state: FSMContext):
+    #     await msg.answer(
+    #         "Выберите дату: ",
+    #         reply_markup=await DialogCalendar().start_calendar()
+    #     )
 
     # dialog calendar usage
     @router.message(Calc.date_prompt)
