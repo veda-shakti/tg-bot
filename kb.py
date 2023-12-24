@@ -41,7 +41,7 @@ class Markups:
 
     def __init__(self):
         self._markups = {
-            MarkupKeys.MAIN_MARKUP: self.__createMarkup__([
+            MarkupKeys.MAIN_MARKUP: self.__createInlineMarkup__([
                 ButtonsKeys.CALC
             ]),
 
