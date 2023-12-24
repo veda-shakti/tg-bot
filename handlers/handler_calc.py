@@ -23,13 +23,22 @@ def setup_handler(router: Router):
         )
 
     # Step 1: Date choise
-    @router.message(F.text == bk.CALC.value)
-    async def start_calc_handler(msg: Message, state: FSMContext):
-        await state.set_state(Calc.date_prompt)
-        await msg.answer(
-            await rf('calculator_intro'),
-            reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
-        )
+    # @router.message(F.text == bk.CALC.value)
+    # async def start_calc_handler(msg: Message, state: FSMContext):
+    #     await state.set_state(Calc.date_prompt)
+    #     await msg.answer(
+    #         await rf('calculator_intro'),
+    #         reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
+    #     )
+        
+    @router.callback_query()
+    async def start_calc_handler(callback_query: CallbackQuery, state: FSMContext):
+        if callback_query.data == bk.CALC.name:
+            await state.set_state(Calc.date_prompt)
+            await callback_query.message.answer(
+                await rf('calculator_intro'),
+                reply_markup=await markups[mk.CALC_DATE_CHOICE_MARKUP]
+            )
 
     # Step 2.1: Date is known
     @router.message(Calc.date_prompt)
