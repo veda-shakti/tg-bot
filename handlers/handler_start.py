@@ -9,4 +9,4 @@ def setup_handler(router):
     @router.message(Command("start"))
     async def start_handler(msg: Message):
         await msg.answer(await rf('start'))
-        await msg.answer(await rf('notification'), reply_markup=await markups[mk.MAIN_MARKUP])
+        await msg.answer(await rf('start2'), reply_markup=await markups[mk.MAIN_MARKUP])
