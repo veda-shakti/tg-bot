@@ -4,10 +4,10 @@ from enum import Enum
 
 
 class MarkupKeys(Enum):
-    MAIN_MARKUP             = 1
-    CALC_DATE_CHOICE_MARKUP = 2
-    CALC_FULL_MARKUP        = 3
-    CALC_PART_MARKUP        = 4
+    MAIN_MARKUP         = 1
+    CALC_UNKNOWN_TIME   = 2
+    HOURS               = 3
+    MINUTES             = 4
 
 
 class ButtonsKeys(Enum):
@@ -15,7 +15,7 @@ class ButtonsKeys(Enum):
     RACHUKE         = '🌌 Прогноз по оси Раху-Кету'
     CHECK_2023      = '📆 Сверьте каким для вас был 2023'
     DATE_KNOWN      = '✅ Знаю точную дату своего рождения'
-    DATE_UNKNOWN    = '❌ Не знаю точную дату своего рождения'
+    TIME_UNKNOWN    = '❌ Пропустить'
     RETURN          = '↩️ Вернуться'
 
 
@@ -30,14 +30,23 @@ class Markups:
         )
         return markup
     
-    def __createInlineMarkup__(self, button_keys: list[ButtonsKeys]) -> ReplyKeyboardMarkup:
-        markup = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text=str(button.value), callback_data=str(button.name))] 
-                for button in button_keys
-            ]
-        )
-        return markup
+    def __createInlineMarkup__(self, button_keys: list[ButtonsKeys], row_width: int = 1) -> InlineKeyboardMarkup:
+        buttons = []
+        for button in button_keys:
+            if isinstance(button, ButtonsKeys):
+                # Для объектов ButtonsKeys используем их свойства value и name
+                text = str(button.value)
+                callback_data = str(button.name)
+            else:
+                # Для остальных (чисел) используем сами значения
+                text = str(button)
+                callback_data = f"time:{button}"  # Пример формата для callback_data
+
+            buttons.append(InlineKeyboardButton(text=text, callback_data=callback_data))
+
+        # Разбиваем кнопки на строки согласно row_width
+        keyboard = [buttons[i:i + row_width] for i in range(0, len(buttons), row_width)]
+        return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
     def __init__(self):
         self._markups = {
@@ -45,21 +54,19 @@ class Markups:
                 ButtonsKeys.CALC
             ]),
 
-            MarkupKeys.CALC_DATE_CHOICE_MARKUP: self.__createMarkup__([
-                ButtonsKeys.DATE_KNOWN,
-                ButtonsKeys.DATE_UNKNOWN,
-                ButtonsKeys.RETURN
+            MarkupKeys.CALC_UNKNOWN_TIME: self.__createMarkup__([
+                ButtonsKeys.TIME_UNKNOWN
             ]),
 
-            MarkupKeys.CALC_FULL_MARKUP: self.__createMarkup__([
-                ButtonsKeys.DATE_KNOWN,
-                ButtonsKeys.DATE_UNKNOWN
-            ]),
+            MarkupKeys.HOURS: self.__createInlineMarkup__([
+                ' ', 'Час', ' ',
+                *[HOUR for HOUR in range(24)]
+            ], row_width=3),
 
-            MarkupKeys.CALC_PART_MARKUP: self.__createMarkup__([
-                ButtonsKeys.DATE_KNOWN,
-                ButtonsKeys.DATE_UNKNOWN
-            ])
+            MarkupKeys.MINUTES: self.__createInlineMarkup__([
+                ' ', ' ', 'Мин', ' ', ' ',
+                *[HOUR for HOUR in range(0, 60, 5)]
+            ], row_width=5)
         }
 
     async def __getitem__(self, key: MarkupKeys):
