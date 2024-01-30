@@ -94,6 +94,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           export SHAKTI_BOT="${{ secrets.SHAKTI_BOT }}"
+          export ADMIN_ID="${{ secrets.ADMIN_ID }}"
           cd /home/devilaks/bot
           ./stop.sh
 
