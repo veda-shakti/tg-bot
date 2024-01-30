@@ -93,9 +93,10 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
+          cd /home/devilaks/bot  
           export SHAKTI_BOT="${{ secrets.SHAKTI_BOT }}"
           export ADMIN_ID="${{ secrets.ADMIN_ID }}"
-          cd /home/devilaks/bot
+                    
           ./stop.sh
 
           if [ -f packaged-code.tar.gz ]; then
