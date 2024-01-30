@@ -11,6 +11,7 @@ jobs:
 
     env:
       BOT_TOKEN: ${{ secrets.SHAKTI_BOT }}
+      ADMIN_ID: ${{ secrets.ADMIN_ID }}
 
     steps:
     - uses: actions/checkout@v3

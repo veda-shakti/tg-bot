@@ -1,0 +1,1 @@
+from .text_handler import read_text_from_file
