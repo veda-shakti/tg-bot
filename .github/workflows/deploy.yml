@@ -9,11 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      BOT_TOKEN: ${{ secrets.SHAKTI_BOT }}
-      ADMIN_ID: ${{ secrets.ADMIN_ID }}
-
     steps:
+    - name: Send Telegram Notification on Workflow Start
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          🏁 [Бот] Зарегестрирован процесс налачала сборки!
+          *️⃣ Подробности сборки можно посмотреть здесь: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
     - uses: actions/checkout@v3
 
     - name: Set up Python
@@ -62,6 +67,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    env:
+      BOT_TOKEN: ${{ secrets.SHAKTI_BOT }}
+      ADMIN_ID: ${{ secrets.ADMIN_ID }}
+
     steps:
     - uses: actions/checkout@v3
 
@@ -96,7 +105,7 @@ jobs:
           cd /home/devilaks/bot  
           export SHAKTI_BOT="${{ secrets.SHAKTI_BOT }}"
           export ADMIN_ID="${{ secrets.ADMIN_ID }}"
-                    
+
           ./stop.sh
 
           if [ -f packaged-code.tar.gz ]; then
@@ -127,4 +136,6 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        message: "🚀 [Бот][2/2] Развёртывание успешно завершено! Проверьте бота: @anastasia_shakti_bot"
+        message: |
+          🚀 [Бот][2/2] Развёртывание успешно завершено! Проверьте бота: @anastasia_shakti_bot
+          *️⃣ Подробности сборки можно посмотреть здесь: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
