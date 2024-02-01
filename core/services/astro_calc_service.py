@@ -5,24 +5,28 @@ async def astro_calc(location: dict, full_datetime: datetime) -> dict:
     swe.set_ephe_path('assets/ephe')
 
     # Convert datetime to Julian Day Number (JDN)
-    jdn = swe.julday(full_datetime.year, full_datetime.month, full_datetime.day, full_datetime.hour + full_datetime.minute / 60 + full_datetime.second / 3600)
+    jdn = swe.julday(full_datetime.year, full_datetime.month, full_datetime.day,
+                     full_datetime.hour + full_datetime.minute / 60 + full_datetime.second / 3600)
 
-    # Setting flags for calculation (e.g. using topocentric positions)
+    # Setting flags for calculation
     flags = swe.FLG_SWIEPH | swe.FLG_TOPOCTR | swe.FLG_SPEED
 
     # Set geoposition for topocentric calculations
     swe.set_topo(location['lon'], location['lat'], 0)
 
-    # Calculating the position of the Sun
-    sun_long = swe.calc_ut(jdn, swe.SUN, flags=flags)[0][0]
+    # Get the ayanamsa value for given Julian Day
+    ayanamsa = swe.get_ayanamsa(jdn)
+
+    # Calculating the position of the Sun and correcting for ayanamsa
+    sun_long = swe.calc_ut(jdn, swe.SUN, flags=flags)[0][0] - ayanamsa
     sun_sign = get_zodiac_sign(sun_long)
 
-    # Calculating the position of the moon
-    moon_long = swe.calc_ut(jdn, swe.MOON, flags=flags)[0][0]
+    # Calculating the position of the Moon and correcting for ayanamsa
+    moon_long = swe.calc_ut(jdn, swe.MOON, flags=flags)[0][0] - ayanamsa
     moon_sign = get_zodiac_sign(moon_long)
 
-    # Ascendant calculation
-    ascendant_long = swe.houses(jdn, location['lat'], location['lon'], b'A')[0][0]
+    # Ascendant calculation and correcting for ayanamsa
+    ascendant_long = swe.houses(jdn, location['lat'], location['lon'], b'A')[0][0] - ayanamsa
     ascendant_sign = get_zodiac_sign(ascendant_long)
 
     return {
