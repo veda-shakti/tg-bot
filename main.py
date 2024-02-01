@@ -4,7 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher, Router
 from aiogram.fsm.storage.memory import MemoryStorage
 
-import config_local as config
+import config
 
 from core.handlers import setup_handlers
 from core.admin import setup_admin, set_commands
