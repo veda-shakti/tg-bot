@@ -8,6 +8,7 @@ import config
 
 from core.handlers import setup_handlers
 from core.admin import setup_admin, set_commands
+from core.services import setup_utils
 
 
 async def main():
@@ -18,6 +19,7 @@ async def main():
     dp.include_router(router)
 
     setup_handlers(router)
+    setup_utils()
 
     await setup_admin(dp)
     await set_commands(bot)
