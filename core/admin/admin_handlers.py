@@ -1,6 +1,5 @@
 from aiogram import Bot, Dispatcher
-from config import ADMIN_ID
-
+from config_local import ADMIN_ID
 
 async def start_bot(bot: Bot):
     await bot.send_message(ADMIN_ID, text='Bot started!')

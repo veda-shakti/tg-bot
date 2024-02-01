@@ -15,4 +15,4 @@ async def get_datetime(state: FSMContext) -> datetime:
     )
 
 async def get_skip_state(state: FSMContext) -> bool | None:
-    return (await state.get_data()).get("location")
+    return (await state.get_data()).get("skip_time")

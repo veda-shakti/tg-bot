@@ -122,6 +122,7 @@ def setup_handler(router: Router):
         await set_typing(callback_query)
 
         results = await astro_calc(await get_location(state), await get_datetime(state))
+        
 
         await callback_query.message.answer(
             await rf(
@@ -131,11 +132,3 @@ def setup_handler(router: Router):
             reply_markup=await markups[mk.MAIN_MARKUP]
         )
         await state.clear()
-
-
-
-            
-
-
-
-

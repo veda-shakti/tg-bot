@@ -11,3 +11,4 @@ tg
 tg.pub
 
 assets/local
+config_local.py
